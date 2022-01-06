@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
+  Image,
   Text,
   View,
   ScrollView,
@@ -95,10 +96,14 @@ export default function App() {
                 <Text style={styles.temp}>
                   {parseFloat(day.temp.day).toFixed(1)}
                 </Text>
-                <Fontisto
-                  name={icons[day.weather[0].main]}
-                  size={68}
-                  color="white"
+                <Image
+                  style={{
+                    width: 120,
+                    height: 120,
+                  }}
+                  source={{
+                    uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
+                  }}
                 />
               </View>
               <Text style={styles.description}>{day.weather[0].main}</Text>
@@ -115,7 +120,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "tomato",
+    backgroundColor: "darkolivegreen",
   },
   city: {
     flex: 1.2,
