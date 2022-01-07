@@ -10,17 +10,32 @@ import {
   Pressable,
   TextInput,
 } from 'react-native';
-import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 import { theme } from './Colors';
+import styles from './App.style';
 
 export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
 
   const work = () => setWorking(true);
   const travel = () => setWorking(false);
 
   const onChangeText = (payload) => setText(payload);
+
+  const addToDo = () => {
+    if (text === "") {
+      return;
+    }
+
+    const newToDos = Object.assign(
+      {},
+      toDos,
+      { [Date.now()]: { text, work: working } }
+    );
+    setToDos(newToDos);
+    setText("");
+  };
 
   return (
     <View style={styles.container}>
@@ -40,7 +55,9 @@ export default function App() {
       </View>
 
       <TextInput
+        onSubmitEditing={addToDo}
         onChangeText={onChangeText}
+        returnKeyType="done"
         value={text}
         placeholder={working ? "Add a To Do" : "Where do you want to go?"}
         style={styles.input}
@@ -48,29 +65,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.bg,
-    paddingHorizontal: 20,
-  },
-  header: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    marginTop: 50,
-  },
-  btnText: {
-    fontSize: 38,
-    fontWeight: "600",
-    color: "white",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 30,
-    marginTop: 20,
-    fontSize: 18,
-  },
-});
