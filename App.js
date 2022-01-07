@@ -3,16 +3,13 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  StyleSheet,
   Image,
   Text,
   View,
-  ScrollView,
-  Dimensions
+  ScrollView
 } from 'react-native';
 import { Fontisto } from '@expo/vector-icons';
-
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+import styles from "./App.style";
 
 const API_KEY = "0e70add5360fe8f239932874572eb02c";
 
@@ -53,7 +50,9 @@ export default function App() {
       `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}&units=metric`
     );
     const json = await response.json();
-    setDays(json.daily);
+    if (json.daily) {
+      setDays(json.daily);
+    }
   };
 
   useEffect(() => {
@@ -116,45 +115,3 @@ export default function App() {
     </View >
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkolivegreen",
-  },
-  city: {
-    flex: 1.2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cityName: {
-    fontSize: 58,
-    fontWeight: "500",
-    color: "white",
-  },
-  weather: {
-  },
-  day: {
-    width: SCREEN_WIDTH,
-    alignItems: "flex-start",
-    paddingHorizontal: 20,
-  },
-  temp: {
-    marginTop: 50,
-    fontWeight: "600",
-    fontSize: 100,
-    color: "white",
-  },
-  description: {
-    marginTop: -10,
-    fontSize: 30,
-    color: "white",
-    fontWeight: "500",
-  },
-  tinyText: {
-    marginTop: -5,
-    fontSize: 25,
-    color: "white",
-    fontWeight: "500",
-  },
-});
