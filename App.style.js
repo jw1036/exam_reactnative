@@ -26,7 +26,7 @@ export default StyleSheet.create({
     fontSize: 18,
   },
   toDo: {
-    backgroundColor: theme.gray,
+    backgroundColor: theme.toDoBg,
     marginBottom: 10,
     paddingVertical: 20,
     paddingHorizontal: 20,
@@ -35,6 +35,6 @@ export default StyleSheet.create({
   toDoText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 });
