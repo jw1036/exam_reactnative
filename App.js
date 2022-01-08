@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { theme } from './Colors';
 import styles from './App.style';
@@ -28,14 +29,14 @@ export default function App() {
       return;
     }
 
-    const newToDos = Object.assign(
-      {},
-      toDos,
-      { [Date.now()]: { text, work: working } }
-    );
+    const newToDos = {
+      ...toDos,
+      [Date.now()]: { text, work: working }
+    };
     setToDos(newToDos);
     setText("");
   };
+  console.log(toDos);
 
   return (
     <View style={styles.container}>
@@ -62,6 +63,16 @@ export default function App() {
         placeholder={working ? "Add a To Do" : "Where do you want to go?"}
         style={styles.input}
       />
+
+      <ScrollView>
+        {Object.keys(toDos).map(key => (
+          <View key={key} style={styles.toDo}>
+            <Text style={styles.toDoText}>
+              {toDos[key].text}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
