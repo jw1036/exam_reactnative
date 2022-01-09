@@ -11,6 +11,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Fontisto } from '@expo/vector-icons';
@@ -62,23 +63,32 @@ export default function App() {
   };
 
   const deleteToDo = (key) => {
-    Alert.alert(
-      "Delete To Do",
-      "Are you sure?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "I'm sure",
-          style: "destructive",
-          onPress: () => {
-            const newToDos = { ...toDos };
-            delete newToDos[key];
-            setToDos(newToDos);
-            saveToDos(newToDos);
-          }
-        },
-      ]
-    );
+    if (Platform.OS == "web") {
+      if (confirm("Do you want to delete this To Do?")) {
+        const newToDos = { ...toDos };
+        delete newToDos[key];
+        setToDos(newToDos);
+        saveToDos(newToDos);
+      }
+    } else {
+      Alert.alert(
+        "Delete To Do",
+        "Are you sure?",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "I'm sure",
+            style: "destructive",
+            onPress: () => {
+              const newToDos = { ...toDos };
+              delete newToDos[key];
+              setToDos(newToDos);
+              saveToDos(newToDos);
+            }
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -87,12 +97,24 @@ export default function App() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={work}>
-          <Text style={{ ...styles.btnText, color: working ? "white" : theme.gray }}>
+          <Text
+            style={{
+              fontSize: 38,
+              fontWeight: "600",
+              color: working ? "white" : theme.gray
+            }}
+          >
             Work
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={travel}>
-          <Text style={{ ...styles.btnText, color: !working ? "white" : theme.gray }}>
+          <Text
+            style={{
+              fontSize: 38,
+              fontWeight: "600",
+              color: !working ? "white" : theme.gray
+            }}
+          >
             Travel
           </Text>
         </TouchableOpacity>

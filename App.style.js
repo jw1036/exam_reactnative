@@ -15,7 +15,6 @@ export default StyleSheet.create({
   btnText: {
     fontSize: 38,
     fontWeight: "600",
-    color: "white",
   },
   input: {
     backgroundColor: "white",
