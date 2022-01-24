@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Text } from 'react-native';
 import styled from 'styled-components/native';
+import { Button } from 'react-native';
+import { Image } from '../components';
 
 const Container = styled.View`
   flex: 1;
@@ -12,7 +13,7 @@ const Container = styled.View`
 const Login = ({ navigation }) => {
   return (
     <Container>
-      <Text style={{ fontSize: 30 }}>Login</Text>
+      <Image />
       <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
     </Container>
   );
