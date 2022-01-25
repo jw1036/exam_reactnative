@@ -47,7 +47,7 @@ const Login = ({ navigation }) => {
   };
 
   const handleSignupButtonPress = () => {
-    console.log('handleSignupButtonPress');
+    navigation.navigate('Signup');
   };
 
   useEffect(() => {
