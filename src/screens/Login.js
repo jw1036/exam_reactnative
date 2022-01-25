@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/native';
-import { Image, Input } from '../components';
+import { Image, Input, Button } from '../components';
 import { images } from '../utils/images';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { removeWhitespace, validateEmail } from '../utils/common';
@@ -27,6 +27,7 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const passwordRef = useRef();
   const [errorMessage, setErrorMessage] = useState('');
+  const [disabled, setDisabled] = useState(true);
 
   const handleEmailChange = email => {
     const changedEmail = removeWhitespace(email);
@@ -35,10 +36,23 @@ const Login = ({ navigation }) => {
       validateEmail(changedEmail) ? '' : 'Please verify your email'
     );
   };
+
   const handlePasswordChange = password => {
     const changedPassword = removeWhitespace(password);
     setPassword(changedPassword);
   };
+
+  const handleLoginButtonPress = () => {
+    console.log('handleLoginButtonPress');
+  };
+
+  const handleSignupButtonPress = () => {
+    console.log('handleSignupButtonPress');
+  };
+
+  useEffect(() => {
+    setDisabled(!(email && password && !errorMessage));
+  }, [email, password, errorMessage]);
 
   return (
     <KeyboardAwareScrollView
@@ -61,12 +75,25 @@ const Login = ({ navigation }) => {
           label="Password"
           value={password}
           onChangeText={handlePasswordChange}
-          onSubmitEditing={() => {}}
+          onSubmitEditing={handleLoginButtonPress}
           placeholder="Password"
           returnKeyType="done"
           isPassword
         />
+
         <ErrorText>{errorMessage}</ErrorText>
+
+        <Button
+          title="Login"
+          onPress={handleLoginButtonPress}
+          disabled={disabled}
+        />
+
+        <Button
+          title="Sign up with email"
+          onPress={handleSignupButtonPress}
+          isFilled={false}
+        />
       </Container>
     </KeyboardAwareScrollView>
   );
