@@ -32,20 +32,25 @@ const Signup = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+  const didMountRef = useRef();
 
   useEffect(() => {
-    let errorMessage = '';
-    if (!name) {
-      errorMessage = 'Please enter your name';
-    } else if (!validateEmail(email)) {
-      errorMessage = 'Please verify your email';
-    } else if (password.length < 6) {
-      errorMessage = 'The password must contain 6 characters at least';
-    } else if (password !== passwordConfirm) {
-      errorMessage = 'Passwords neet to match';
-    }
+    if (didMountRef.current) {
+      let errorMessage = '';
+      if (!name) {
+        errorMessage = 'Please enter your name';
+      } else if (!validateEmail(email)) {
+        errorMessage = 'Please verify your email';
+      } else if (password.length < 6) {
+        errorMessage = 'The password must contain 6 characters at least';
+      } else if (password !== passwordConfirm) {
+        errorMessage = 'Passwords neet to match';
+      }
 
-    setErrorMessage(errorMessage);
+      setErrorMessage(errorMessage);
+    } else {
+      didMountRef.current = true;
+    }
   }, [name, email, password, passwordConfirm]);
 
   useEffect(() => {
