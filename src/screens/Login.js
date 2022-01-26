@@ -5,6 +5,8 @@ import { images } from '../utils/images';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { removeWhitespace, validateEmail } from '../utils/common';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { login } from '../utils/firebase';
+import { Alert } from 'react-native';
 
 const Container = styled.View`
   flex: 1;
@@ -44,8 +46,13 @@ const Login = ({ navigation }) => {
     setPassword(changedPassword);
   };
 
-  const handleLoginButtonPress = () => {
-    console.log('handleLoginButtonPress');
+  const handleLoginButtonPress = async () => {
+    try {
+      const user = await login({ email, password });
+      Alert.alert('Login Success', user.email);
+    } catch (e) {
+      Alert.alert('Login Error', e.message);
+    }
   };
 
   const handleSignupButtonPress = () => {
