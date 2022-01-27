@@ -7,6 +7,7 @@ import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import Navigation from './navigations';
 import { images } from './utils/images';
+import { ProgressProvider } from './contexts';
 
 const cacheImages = images => {
   return images.map(image => {
@@ -37,9 +38,10 @@ const App = () => {
 
   return isReady ? (
     <ThemeProvider theme={theme}>
-      <StatusBar barStyle="dark-content" />
-
-      <Navigation />
+      <ProgressProvider>
+        <StatusBar barStyle="dark-content" backgroundColor={theme.background} />
+        <Navigation />
+      </ProgressProvider>
     </ThemeProvider>
   ) : (
     <AppLoading
