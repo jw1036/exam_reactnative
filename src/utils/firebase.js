@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  signOut,
 } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -49,4 +50,8 @@ export const signup = async ({ email, password, name, photoUrl }) => {
     photoURL: storageUrl,
   });
   return user;
+};
+
+export const logout = async () => {
+  await signOut(auth);
 };
