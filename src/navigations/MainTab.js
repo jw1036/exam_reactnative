@@ -3,17 +3,25 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ChannelList, Profile } from '../screens';
 import { ThemeContext } from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const MainTab = () => {
+const MainTab = ({ navigation, route }) => {
   const theme = useContext(ThemeContext);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: getFocusedRouteNameFromRoute(route) ?? 'Channels',
+    });
+  }, [navigation, route]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           const icons = {
-            ['Channel List']: focused ? 'chat-bubble' : 'chat-bubble-outline',
+            ['Channels']: focused ? 'chat-bubble' : 'chat-bubble-outline',
             ['Profile']: focused ? 'person' : 'person-outline',
           };
           return (
@@ -25,7 +33,7 @@ const MainTab = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Channel List" component={ChannelList} />
+      <Tab.Screen name="Channels" component={ChannelList} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
