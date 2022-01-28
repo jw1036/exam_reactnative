@@ -25,6 +25,8 @@ export const theme = {
   buttonUnfilledTitle: colors.blue,
 
   headerTintColor: colors.black,
+  tabActiveColor: colors.blue,
+  tabInactiveColor: colors.grey_1,
 
   spinnerBackground: colors.black,
   spinnerIndicator: colors.white,
