@@ -43,33 +43,35 @@ for (let index = 0; index < 1000; index++) {
     id: index,
     title: `title ${index}`,
     description: `description ${index}`,
-    createAt: index,
+    createdAt: index,
   });
 }
 
-const Item = ({ item: { id, title, description, createAt }, onPress }) => {
-  const { theme } = useContext(ThemeContext);
-  console.log(`Item: ${id}`);
+const Item = React.memo(
+  ({ item: { id, title, description, createdAt }, onPress }) => {
+    const { theme } = useContext(ThemeContext);
+    console.log(`Item: ${id}`);
 
-  return (
-    <ItemContainer onPress={() => onPress({ id, title })}>
-      <ItemTextContainer>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-      </ItemTextContainer>
-      <ItemTime>{createAt}</ItemTime>
-      <MaterialIcons
-        name="keyboard-arrow-right"
-        size={24}
-        color={theme?.listIcon}
-      />
-    </ItemContainer>
-  );
-};
+    return (
+      <ItemContainer onPress={() => onPress({ id, title })}>
+        <ItemTextContainer>
+          <ItemTitle>{title}</ItemTitle>
+          <ItemDescription>{description}</ItemDescription>
+        </ItemTextContainer>
+        <ItemTime>{createdAt}</ItemTime>
+        <MaterialIcons
+          name="keyboard-arrow-right"
+          size={24}
+          color={theme?.listIcon}
+        />
+      </ItemContainer>
+    );
+  }
+);
 
 const ChannelList = ({ navigation }) => {
   const handleItemPress = params => {
-    console.log(params);
+    navigation.navigate('Channel', params);
   };
 
   return (
