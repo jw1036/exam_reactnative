@@ -8,6 +8,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
 const app = initializeApp(config);
 
@@ -67,4 +68,19 @@ export const updateUserPhoto = async photoUrl => {
     : await uploadImage(photoUrl);
   await updateProfile(auth.currentUser, { photoURL: storageUrl });
   return getCurrentUser();
+};
+
+const db = getFirestore();
+
+export const createChannel = async (title, description) => {
+  const newChannelRef = doc(collection(db, 'channels'));
+  const id = newChannelRef.id;
+  const newChannel = {
+    id,
+    title,
+    description,
+    createdAt: Date.now(),
+  };
+  const docRef = await setDoc(newChannelRef, newChannel);
+  return id;
 };
