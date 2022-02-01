@@ -14,6 +14,8 @@ import {
   doc,
   setDoc,
   onSnapshot,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 
 const app = initializeApp(config);
@@ -92,8 +94,20 @@ export const createChannel = async (title, description) => {
 };
 
 export const subscribeChannels = handleSnapshot => {
-  const unsubscribe = onSnapshot(collection(db, 'channels'), snapshot =>
-    handleSnapshot(snapshot)
+  const unsubscribe = onSnapshot(
+    query(collection(db, 'channels'), orderBy('createdAt', 'desc')),
+    snapshot => handleSnapshot(snapshot)
+  );
+  return unsubscribe;
+};
+
+export const subscribeMessages = (id, handleSnapshot) => {
+  const unsubscribe = onSnapshot(
+    query(
+      collection(doc(collection(db, 'channels'), id), 'messages'),
+      orderBy('createdAt', 'desc')
+    ),
+    snapshot => handleSnapshot(snapshot)
   );
   return unsubscribe;
 };
