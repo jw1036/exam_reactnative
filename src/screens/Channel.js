@@ -1,7 +1,8 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import { FlatList, Text } from 'react-native';
-import { subscribeMessages } from '../utils/firebase';
+import { createMessage, subscribeMessages } from '../utils/firebase';
+import { Input } from '../components';
 
 const Container = styled.View`
   flex: 1;
@@ -10,6 +11,7 @@ const Container = styled.View`
 
 const Channel = ({ navigation, route: { params } }) => {
   const [messages, setMessages] = useState([]);
+  const [text, setText] = useState('');
 
   useEffect(() => {
     try {
@@ -36,6 +38,11 @@ const Channel = ({ navigation, route: { params } }) => {
         renderItem={({ item }) => (
           <Text style={{ fontSize: 24 }}>{item.text}</Text>
         )}
+      />
+      <Input
+        value={text}
+        onChangeText={text => setText(text)}
+        onSubmitEditing={() => createMessage({ channelId: params.id, text })}
       />
     </Container>
   );

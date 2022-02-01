@@ -16,6 +16,7 @@ import {
   onSnapshot,
   query,
   orderBy,
+  addDoc,
 } from 'firebase/firestore';
 
 const app = initializeApp(config);
@@ -110,4 +111,16 @@ export const subscribeMessages = (id, handleSnapshot) => {
     snapshot => handleSnapshot(snapshot)
   );
   return unsubscribe;
+};
+
+export const createMessage = async ({ channelId, text }) => {
+  const newMessageRef = collection(
+    doc(collection(db, 'channels'), channelId),
+    'messages'
+  );
+  const newMessage = {
+    text,
+    createdAt: Date.now(),
+  };
+  await addDoc(newMessageRef, newMessage);
 };
