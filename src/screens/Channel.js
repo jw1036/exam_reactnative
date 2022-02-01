@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import styled, { ThemeContext } from 'styled-components/native';
-import { FlatList, Text } from 'react-native';
+import { Alert } from 'react-native';
 import {
   createMessage,
   subscribeMessages,
@@ -63,7 +63,14 @@ const Channel = ({ navigation, route: { params } }) => {
     navigation.setOptions({ headerTitle: params.title || 'Channel' });
   }, []);
 
-  const handleMessageSend = () => {};
+  const handleMessageSend = async messageList => {
+    const newMessage = messageList[0];
+    try {
+      await createMessage({ channelId: params.id, message: newMessage });
+    } catch (e) {
+      Alert.alert('Send Message Error', e.message);
+    }
+  };
 
   return (
     <Container>

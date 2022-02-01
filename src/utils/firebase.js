@@ -113,13 +113,13 @@ export const subscribeMessages = (id, handleSnapshot) => {
   return unsubscribe;
 };
 
-export const createMessage = async ({ channelId, text }) => {
+export const createMessage = async ({ channelId, message }) => {
   const newMessageRef = collection(
     doc(collection(db, 'channels'), channelId),
     'messages'
   );
   const newMessage = {
-    text,
+    ...message,
     createdAt: Date.now(),
   };
   await addDoc(newMessageRef, newMessage);
