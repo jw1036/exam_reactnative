@@ -13,6 +13,14 @@ const MainTab = ({ navigation, route }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: getFocusedRouteNameFromRoute(route) ?? 'Channels',
+      headerRight: () => (
+        <MaterialIcons
+          name="add"
+          size={26}
+          style={{ margin: 10 }}
+          onPress={() => navigation.navigate('Channel Creation')}
+        />
+      ),
     });
   }, [navigation, route]);
 
