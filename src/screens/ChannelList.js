@@ -80,6 +80,7 @@ const ChannelList = ({ navigation }) => {
         renderItem={({ item }) => (
           <Item item={item} onPress={handleItemPress} />
         )}
+        windowSize={3}
       />
     </Container>
   );
