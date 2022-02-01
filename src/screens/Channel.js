@@ -1,15 +1,48 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import styled from 'styled-components/native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components/native';
 import { FlatList, Text } from 'react-native';
-import { createMessage, subscribeMessages } from '../utils/firebase';
-import { Input } from '../components';
+import {
+  createMessage,
+  subscribeMessages,
+  getCurrentUser,
+} from '../utils/firebase';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.background};
 `;
 
+const SendButton = props => {
+  const theme = useContext(ThemeContext);
+
+  return (
+    <Send
+      {...props}
+      disabled={!props.text}
+      containerStyle={{
+        width: 44,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 4,
+      }}
+    >
+      <MaterialIcons
+        name="send"
+        size={24}
+        color={
+          props.text ? theme.sendButtonActivate : theme.sendButtonInactivate
+        }
+      />
+    </Send>
+  );
+};
+
 const Channel = ({ navigation, route: { params } }) => {
+  const theme = useContext(ThemeContext);
+  const { uid, name, photoUrl } = getCurrentUser();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
 
@@ -30,19 +63,29 @@ const Channel = ({ navigation, route: { params } }) => {
     navigation.setOptions({ headerTitle: params.title || 'Channel' });
   }, []);
 
+  const handleMessageSend = () => {};
+
   return (
     <Container>
-      <FlatList
-        keyExtractor={item => item['id']}
-        data={messages}
-        renderItem={({ item }) => (
-          <Text style={{ fontSize: 24 }}>{item.text}</Text>
-        )}
-      />
-      <Input
-        value={text}
-        onChangeText={text => setText(text)}
-        onSubmitEditing={() => createMessage({ channelId: params.id, text })}
+      <GiftedChat
+        listViewProps={{
+          style: { backgroundColor: theme.background },
+        }}
+        placeholder="Enter a message..."
+        messages={messages}
+        user={{ _id: uid, name, avatar: photoUrl }}
+        onSend={handleMessageSend}
+        alwaysShowSend={true}
+        textInputProps={{
+          autoCapitalize: 'none',
+          autoCorrect: false,
+          textContentType: 'none',
+          underlineColorAndroid: 'transparent',
+        }}
+        multiline={false}
+        renderUsernameOnMessage={true}
+        scrollToBottom={true}
+        renderSend={props => <SendButton {...props} />}
       />
     </Container>
   );
