@@ -8,7 +8,13 @@ import {
   signOut,
 } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+} from 'firebase/firestore';
 
 const app = initializeApp(config);
 
@@ -83,4 +89,11 @@ export const createChannel = async (title, description) => {
   };
   const docRef = await setDoc(newChannelRef, newChannel);
   return id;
+};
+
+export const subscribeChannels = handleSnapshot => {
+  const unsubscribe = onSnapshot(collection(db, 'channels'), snapshot =>
+    handleSnapshot(snapshot)
+  );
+  return unsubscribe;
 };
