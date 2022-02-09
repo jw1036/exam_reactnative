@@ -14,7 +14,6 @@ const Container = styled.View`
 `;
 
 const Profile = () => {
-  const { dispatch } = useContext(UserContext);
   const { spinner } = useContext(ProgressContext);
   const theme = useContext(ThemeContext);
 
@@ -28,7 +27,6 @@ const Profile = () => {
     } catch (e) {
       console.log('[Profile] logout: ', e.message);
     } finally {
-      dispatch({});
       spinner.stop();
     }
   };
