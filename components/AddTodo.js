@@ -31,6 +31,8 @@ function AddTodo() {
         style={styles.input}
         value={text}
         onChangeText={setText}
+        onSubmitEditing={onPress}
+        returnKeyType="done"
       />
       {Platform.select({
         ios: (
