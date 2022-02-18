@@ -27,6 +27,13 @@ function App() {
     setTodos(todos.concat(todo));
   };
 
+  const onToggle = id => {
+    const nextTodos = todos.map(todo =>
+      todo.id === id ? {...todo, done: !todo.done} : todo,
+    );
+    setTodos(nextTodos);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={['bottom']} style={styles.block}>
@@ -34,7 +41,11 @@ function App() {
           behavior={Platform.select({ios: 'padding'})}
           style={styles.avoid}>
           <DateHead date={today} />
-          {todos.length > 0 ? <TodoList todos={todos} /> : <Empty />}
+          {todos.length > 0 ? (
+            <TodoList todos={todos} onToggle={onToggle} />
+          ) : (
+            <Empty />
+          )}
           <AddTodo onInsert={onInsert} />
         </KeyboardAvoidingView>
       </SafeAreaView>
