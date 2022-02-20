@@ -3,7 +3,7 @@
  */
 
 import {AppRegistry} from 'react-native';
-import App from './AppMaterialTobTabs';
+import App from './AppMaterialBottomTabs';
 import {name as appName} from './app.json';
 
 AppRegistry.registerComponent(appName, () => App);
