@@ -10,7 +10,7 @@ function WriteEditor({title, body, onChangeTitle, onChangeBody}) {
         placeholder="제목을 입력하세요"
         style={styles.titleInput}
         returnKeyType="next"
-        onTextChange={onChangeTitle}
+        onChangeText={onChangeTitle}
         value={title}
         onSubmitEditing={() => {
           bodyRef.current.focus();
@@ -21,7 +21,7 @@ function WriteEditor({title, body, onChangeTitle, onChangeBody}) {
         style={styles.bodyInput}
         multiline
         textAlignVertical="top"
-        onTextChange={onChangeBody}
+        onChangeText={onChangeBody}
         value={body}
         ref={bodyRef}
       />
