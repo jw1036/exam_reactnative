@@ -1,5 +1,21 @@
 import React from 'react';
 import {Platform, Pressable, StyleSheet, Text} from 'react-native';
+import {format, formatDistanceToNow} from 'date-fns';
+import {ko} from 'date-fns/locale';
+
+function formatDate(date) {
+  const d = new Date(date);
+  const now = Date.now();
+  const diff = (now - d.getTime()) / 1000;
+
+  if (diff < 60 * 1) {
+    return '방금 전';
+  }
+  if (diff < 60 * 60 * 24 * 3) {
+    return formatDistanceToNow(d, {addSuffix: true, locale: ko});
+  }
+  return format(d, 'PPP EEE p', {locale: ko});
+}
 
 function truncate(text) {
   const replaced = text.replace(/\n/g, ' ');
@@ -19,7 +35,7 @@ function FeedListItem({log}) {
         Platform.OS === 'ios' && pressed && {backgroundColor: '#efefef'},
       ]}
       android_ripple={{color: '#ededed'}}>
-      <Text style={styles.date}>{new Date(date).toLocaleString()}</Text>
+      <Text style={styles.date}>{formatDate(date)}</Text>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.body}>{truncate(body)}</Text>
     </Pressable>
