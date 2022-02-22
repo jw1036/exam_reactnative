@@ -5,7 +5,7 @@ const LogContext = createContext();
 
 export function LogContextProvider({children}) {
   const [logs, setLogs] = useState(
-    Array.from({length: 10})
+    Array.from({length: 3})
       .map((_, index) => ({
         id: uuidv4(),
         title: `Log ${index}`,
