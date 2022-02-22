@@ -13,9 +13,11 @@ function FloatWriteButton({hidden}) {
   const animation = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    Animated.timing(animation, {
+    Animated.spring(animation, {
       toValue: hidden ? 1 : 0,
       useNativeDriver: true,
+      tension: 45,
+      friction: 5,
     }).start();
   }, [animation, hidden]);
 
