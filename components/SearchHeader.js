@@ -1,8 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 function SearchHeader() {
-  return <Text style={styles.block}>Hello</Text>;
+  const {width} = useWindowDimensions();
+
+  return <View style={[styles.block, {width: width - 32, height: 24}]} />;
 }
 
 const styles = StyleSheet.create({
