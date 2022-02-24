@@ -1,8 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import TransparentCircleButton from './TransparentCircleButton';
 
 function WriteHeader({onSave, onAskRemove, isEditting, date, onChangeDate}) {
@@ -12,8 +13,27 @@ function WriteHeader({onSave, onAskRemove, isEditting, date, onChangeDate}) {
     navigation.pop();
   };
 
-  console.log(date);
-  console.log(format(new Date(date), 'PPP | p', {locale: ko}));
+  const [mode, setMode] = useState('');
+  const [visiable, setVisible] = useState(false);
+
+  const onPressDate = () => {
+    setMode('date');
+    setVisible(true);
+  };
+
+  const onPressTime = () => {
+    setMode('time');
+    setVisible(true);
+  };
+
+  const onConfirm = selectedDate => {
+    setVisible(false);
+    onChangeDate(selectedDate);
+  };
+
+  const onCancel = () => {
+    setVisible(false);
+  };
 
   return (
     <View style={styles.block}>
@@ -38,14 +58,21 @@ function WriteHeader({onSave, onAskRemove, isEditting, date, onChangeDate}) {
         />
       </View>
       <View style={styles.center}>
-        <Pressable>
+        <Pressable onPress={onPressDate}>
           <Text>{format(new Date(date), 'PPP', {locale: ko})}</Text>
         </Pressable>
         <View style={styles.seperator} />
-        <Pressable>
+        <Pressable onPress={onPressTime}>
           <Text>{format(new Date(date), 'p', {locale: ko})}</Text>
         </Pressable>
       </View>
+      <DateTimePicker
+        isVisible={visiable}
+        mode={mode}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        date={date}
+      />
     </View>
   );
 }
@@ -72,6 +99,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    zIndex: -1,
   },
   seperator: {
     marginLeft: 8,
