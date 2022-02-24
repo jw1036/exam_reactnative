@@ -1,14 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import TransparentCircleButton from './TransparentCircleButton';
 
-function WriteHeader({onSave, onAskRemove, isEditting}) {
+function WriteHeader({onSave, onAskRemove, isEditting, date, onChangeDate}) {
   const navigation = useNavigation();
 
   const onGoBack = () => {
     navigation.pop();
   };
+
+  console.log(date);
+  console.log(format(new Date(date), 'PPP | p', {locale: ko}));
 
   return (
     <View style={styles.block}>
@@ -32,6 +37,15 @@ function WriteHeader({onSave, onAskRemove, isEditting}) {
           onPress={onSave}
         />
       </View>
+      <View style={styles.center}>
+        <Pressable>
+          <Text>{format(new Date(date), 'PPP', {locale: ko})}</Text>
+        </Pressable>
+        <View style={styles.seperator} />
+        <Pressable>
+          <Text>{format(new Date(date), 'p', {locale: ko})}</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -47,6 +61,20 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  center: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  seperator: {
+    marginLeft: 8,
   },
 });
 
