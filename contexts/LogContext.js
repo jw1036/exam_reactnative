@@ -9,43 +9,40 @@ export function LogContextProvider({children}) {
   const [logs, setLogs] = useState([]);
 
   const onCreate = ({title, body, date}) => {
-    const log = {
-      id: uuidv4(),
-      title,
-      body,
-      date,
-    };
-    setLogs([log, ...logs]);
+    const nextLogs = [
+      {
+        id: uuidv4(),
+        title,
+        body,
+        date,
+      },
+      ...logs,
+    ];
+    setLogs(nextLogs);
+    logsStorage.set(nextLogs);
   };
 
   const onModify = modified => {
     const nextLogs = logs.map(log => (log.id === modified.id ? modified : log));
     setLogs(nextLogs);
+    logsStorage.set(nextLogs);
   };
 
   const onRemove = id => {
     const nextLogs = logs.filter(log => log.id !== id);
     setLogs(nextLogs);
+    logsStorage.set(nextLogs);
   };
 
   useEffect(() => {
     (async () => {
       const savedLogs = await logsStorage.get();
-      console.log('gp', savedLogs);
       if (savedLogs) {
         initialLogsRef.current = savedLogs;
         setLogs(savedLogs);
       }
     })();
   }, []);
-
-  useEffect(() => {
-    if (logs === initialLogsRef.current) {
-      return;
-    }
-    console.log('sp', logs);
-    logsStorage.set(logs);
-  }, [logs]);
 
   return (
     <LogContext.Provider value={{logs, onCreate, onModify, onRemove}}>
