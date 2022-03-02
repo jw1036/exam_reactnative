@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -10,6 +11,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import SignButtons from '../components/SignButtons';
 import SignForm from '../components/SignForm';
+import {signIn, signUp} from '../lib/auth';
 
 function SignInScreen({navigation, route}) {
   const {isSignUp} = route.params ?? {};
@@ -18,12 +20,27 @@ function SignInScreen({navigation, route}) {
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
+
   const createChangeTextHandler = name => value => {
     setForm({...form, [name]: value});
   };
-  const onSubmit = () => {
+
+  const onSubmit = async () => {
     Keyboard.dismiss();
-    console.log(form);
+
+    const {email, password} = form;
+    const info = {email, password};
+    setLoading(true);
+    try {
+      const {user} = isSignUp ? await signUp(info) : await signIn(info);
+      console.log(user);
+    } catch (e) {
+      Alert.alert('실패');
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +56,11 @@ function SignInScreen({navigation, route}) {
             createChangeTextHandler={createChangeTextHandler}
             onSubmit={onSubmit}
           />
-          <SignButtons isSignUp={isSignUp} onSubmit={onSubmit} />
+          <SignButtons
+            isSignUp={isSignUp}
+            onSubmit={onSubmit}
+            loading={loading}
+          />
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
