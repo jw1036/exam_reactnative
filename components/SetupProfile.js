@@ -51,7 +51,14 @@ function SetupProfile() {
   return (
     <View style={styles.block}>
       <Pressable onPress={onSelectImage}>
-        <Image style={styles.circle} source={{uri: response?.assets[0]?.uri}} />
+        <Image
+          style={styles.circle}
+          source={
+            response
+              ? {uri: response?.assets[0]?.uri}
+              : require('../assets/user.png')
+          }
+        />
       </Pressable>
       <View style={styles.form}>
         <BorderedInput
