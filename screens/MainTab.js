@@ -1,33 +1,37 @@
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {useUserContext} from '../contexts/UserContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import HomeScreen from './HomeScreen';
+import ProfileScreen from './ProfileScreen';
+
+const Tab = createBottomTabNavigator();
 
 function MainTab() {
-  const {user} = useUserContext();
-
   return (
-    <View style={styles.block}>
-      {user.photoURL && (
-        <Image
-          source={{uri: user.photoURL}}
-          style={{width: 128, height: 128, marginBottom: 16}}
-          resizeMode="cover"
-        />
-      )}
-      <Text style={styles.text}>Hello, {user.displayName}</Text>
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#6200ee',
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({color}) => <Icon name="home" size={24} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="person" size={24} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  block: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 24,
-  },
-});
 
 export default MainTab;
