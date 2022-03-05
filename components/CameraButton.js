@@ -10,6 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import UploadModeModal from './UploadModeModal';
+import {useNavigation} from '@react-navigation/native';
 
 const TABBAR_HEIGHT = 49;
 
@@ -23,6 +24,7 @@ const imagePickerOption = {
 function CameraButton() {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   const bottom = Platform.select({
     android: TABBAR_HEIGHT / 2,
@@ -33,7 +35,7 @@ function CameraButton() {
     if (res.didCancel || !res) {
       return;
     }
-    console.log(res);
+    navigation.navigate('Upload', {res});
   };
 
   const onLaunchCamera = () => {
