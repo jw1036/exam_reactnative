@@ -7,9 +7,15 @@ import {
   useWindowDimensions,
   Animated,
   Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import IconRightButton from '../components/IconRightButton';
+import {useUserContext} from '../contexts/UserContext';
+import storage from '@react-native-firebase/storage';
+import {v4} from 'uuid';
+import {createPost} from '../lib/posts';
 
 function UploadScreen() {
   const route = useRoute();
@@ -19,10 +25,26 @@ function UploadScreen() {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [description, setDescription] = useState('');
   const navigation = useNavigation();
+  const {user} = useUserContext();
 
-  const onSubmit = useCallback(() => {
-    console.log('onSubmit pressed');
-  }, []);
+  const onSubmit = useCallback(async () => {
+    navigation.pop();
+
+    const asset = res.assets[0];
+    const extension = asset.uri.split('.').pop();
+    const reference = storage().ref(`/photo/${user.id}/${v4()}.${extension}`);
+
+    if (Platform.OS === 'android') {
+      await reference.putString(asset.base64, 'base64', {
+        contentType: asset.type,
+      });
+    } else {
+      await reference.putFile(asset.uri);
+    }
+
+    const photoURL = await reference.getDownloadURL();
+    await createPost({description, photoURL, user});
+  }, [description, navigation, res, user]);
 
   useEffect(() => {
     const didShow = Keyboard.addListener('keyboardDidShow', () =>
@@ -54,7 +76,10 @@ function UploadScreen() {
   }, [navigation, onSubmit]);
 
   return (
-    <View styles={styles.block}>
+    <KeyboardAvoidingView
+      behavior={Platform.select({ios: 'height'})}
+      style={styles.block}
+      keyboardVerticalOffset={Platform.select({ios: 180})}>
       <Animated.Image
         source={{uri: res?.assets[0]?.uri}}
         style={[styles.image, {height: animation}]}
@@ -68,7 +93,7 @@ function UploadScreen() {
         value={description}
         onChangeText={setDescription}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -83,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 16,
-    // flex: 1,
+    flex: 1,
     fontSize: 16,
   },
 });
