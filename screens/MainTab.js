@@ -3,8 +3,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CameraButton from '../components/CameraButton';
-import HomeScreen from './HomeScreen';
-import ProfileScreen from './ProfileScreen';
+import HomeStack from './HomeStack';
+import MyProfileStack from './MyProfileStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +19,8 @@ function MainTab() {
             tabBarActiveTintColor: '#6200ee',
           }}>
           <Tab.Screen
-            name="Home"
-            component={HomeScreen}
+            name="HomeStack"
+            component={HomeStack}
             options={{
               tabBarIcon: ({color}) => (
                 <Icon name="home" size={24} color={color} />
@@ -28,8 +28,8 @@ function MainTab() {
             }}
           />
           <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
+            name="MyProfileStack"
+            component={MyProfileStack}
             options={{
               tabBarIcon: ({color}) => (
                 <Icon name="person" size={24} color={color} />

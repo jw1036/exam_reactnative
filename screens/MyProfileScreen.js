@@ -1,8 +1,8 @@
 import React from 'react';
 import {View} from 'react-native';
 
-function ProfileScreen() {
+function MyProfileScreen() {
   return <View />;
 }
 
-export default ProfileScreen;
+export default MyProfileScreen;

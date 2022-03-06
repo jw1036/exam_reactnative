@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {View, StyleSheet, Text, Image, Pressable} from 'react-native';
 
-function PostCard({user, photoURL, description, createdAt, postId}) {
+function PostCard({user, photoURL, description, createdAt, id}) {
   const date = useMemo(
     () => (createdAt ? new Date(createdAt._seconds * 1000) : new Date()),
     [createdAt],
