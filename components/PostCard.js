@@ -4,6 +4,8 @@ import Avatar from './Avatar';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {useUserContext} from '../contexts/UserContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import usePostActions from '../hooks/usePostActions';
+import ActionSheetModal from './ActionSheetModal';
 
 function PostCard({user, photoURL, description, createdAt, id}) {
   const date = useMemo(
@@ -14,6 +16,7 @@ function PostCard({user, photoURL, description, createdAt, id}) {
   const routeNames = useNavigationState(state => state.routeNames);
   const {user: me} = useUserContext();
   const isMyPost = me.id === user.id;
+  const {isSelecting, onPressMore, onClose, actions} = usePostActions();
 
   const onOpenProfile = () => {
     if (routeNames.find(routeName => routeName === 'MyProfile')) {
@@ -27,40 +30,47 @@ function PostCard({user, photoURL, description, createdAt, id}) {
   };
 
   return (
-    <View style={styles.block}>
-      <View style={[styles.head, styles.paddingBlock]}>
-        <Pressable style={styles.profile} onPress={onOpenProfile}>
-          <Avatar source={user.photoURL && {uri: user.photoURL}} />
-          <Image
-            source={
-              user.photoURL
-                ? {uri: user.photoURL}
-                : require('../assets/user.png')
-            }
-            resizeMode="cover"
-            style={styles.avatar}
-          />
-          <Text style={styles.displayName}>{user.displayName}</Text>
-        </Pressable>
-        {isMyPost && (
-          <Pressable hitSlop={8}>
-            <Icon name="more-vert" size={24} />
+    <>
+      <View style={styles.block}>
+        <View style={[styles.head, styles.paddingBlock]}>
+          <Pressable style={styles.profile} onPress={onOpenProfile}>
+            <Avatar source={user.photoURL && {uri: user.photoURL}} />
+            <Image
+              source={
+                user.photoURL
+                  ? {uri: user.photoURL}
+                  : require('../assets/user.png')
+              }
+              resizeMode="cover"
+              style={styles.avatar}
+            />
+            <Text style={styles.displayName}>{user.displayName}</Text>
           </Pressable>
-        )}
+          {isMyPost && (
+            <Pressable hitSlop={8} onPress={onPressMore}>
+              <Icon name="more-vert" size={24} />
+            </Pressable>
+          )}
+        </View>
+        <Image
+          source={{uri: photoURL}}
+          style={styles.image}
+          resizeMethod="resize"
+          resizeMode="cover"
+        />
+        <View style={styles.paddingBlock}>
+          <Text style={styles.description}>{description}</Text>
+          <Text date={date} style={styles.date}>
+            {date.toLocaleString()}
+          </Text>
+        </View>
       </View>
-      <Image
-        source={{uri: photoURL}}
-        style={styles.image}
-        resizeMethod="resize"
-        resizeMode="cover"
+      <ActionSheetModal
+        visible={isSelecting}
+        onClose={onClose}
+        actions={actions}
       />
-      <View style={styles.paddingBlock}>
-        <Text style={styles.description}>{description}</Text>
-        <Text date={date} style={styles.date}>
-          {date.toLocaleString()}
-        </Text>
-      </View>
-    </View>
+    </>
   );
 }
 
