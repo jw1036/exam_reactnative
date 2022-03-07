@@ -1,14 +1,22 @@
 import {useState} from 'react';
 import {ActionSheetIOS, Platform} from 'react-native';
+import {removePost} from '../lib/posts';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-export default function usePostActions() {
+export default function usePostActions({id, description}) {
   const [isSelecting, setIsSelecting] = useState(false);
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const edit = () => {
     console.log('TODO: edit');
   };
-  const remove = () => {
-    console.log('TODO: remove');
+  const remove = async () => {
+    await removePost(id);
+
+    if (route.name === 'Post') {
+      navigation.pop();
+    }
   };
 
   const onPressMore = () => {
