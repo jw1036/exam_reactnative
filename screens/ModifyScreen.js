@@ -8,6 +8,7 @@ import {
 import {useNavigation, useRoute} from '@react-navigation/native';
 import IconRightButton from '../components/IconRightButton';
 import {updatePost} from '../lib/posts';
+import events from '../lib/events';
 
 function ModifyScreen() {
   const navigation = useNavigation();
@@ -15,9 +16,12 @@ function ModifyScreen() {
   const [description, setDescription] = useState(params.description);
 
   const onSubmit = useCallback(async () => {
-    // TODO: 포스트 수정
-    // TODO: 포스트 및 포스트 목록 업데이트
     await updatePost({id: params.id, description});
+
+    events.emit('updatePost', {
+      postId: params.id,
+      description,
+    });
     navigation.pop();
   }, [description, navigation, params.id]);
 
