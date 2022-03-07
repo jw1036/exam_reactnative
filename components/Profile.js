@@ -11,31 +11,15 @@ import {getUser} from '../lib/user';
 import Avatar from './Avatar';
 import PostGridItem from './PostGridItem';
 import usePosts from '../hooks/usePosts';
-import {useUserContext} from '../contexts/UserContext';
-import events from '../lib/events';
 
 function Profile({userId}) {
   const [user, setUser] = useState(null);
-  const {posts, noMorePost, refreshing, onLoadMore, onRefresh, removePost} =
+  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} =
     usePosts(userId);
-  const {user: me} = useUserContext();
-  const isMyProfile = me.id === userId;
 
   useEffect(() => {
     getUser(userId).then(setUser);
   }, [userId]);
-
-  useEffect(() => {
-    if (!isMyProfile) {
-      return;
-    }
-    events.addListener('refresh', onRefresh);
-    events.addListener('removePost', removePost);
-    return () => {
-      events.removeListener('refresh', onRefresh);
-      events.removeListener('removePost', removePost);
-    };
-  }, [isMyProfile, onRefresh, removePost]);
 
   if (!user || !posts) {
     return (
