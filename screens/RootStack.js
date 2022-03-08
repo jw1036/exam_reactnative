@@ -9,6 +9,7 @@ import {getUser} from '../lib/user';
 import UploadScreen from './UploadScreen';
 import ModifyScreen from './ModifyScreen';
 import SettingScreen from './SettingScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ function RootStack() {
     const unscribe = subscribeAuth(async currentUser => {
       unscribe();
       if (!currentUser) {
+        SplashScreen.hide();
         return;
       }
       const profile = await getUser(currentUser.uid);
