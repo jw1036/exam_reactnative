@@ -1,19 +1,40 @@
 import React from 'react';
 import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../slices';
+import {authorize, logout} from '../slices/auth';
 
 function AuthStatus() {
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
     <View style={styles.status}>
-      <Text style={styles.text}>AuthStatus</Text>
+      <Text style={styles.text}>
+        {user ? user.displayName : '로그인하세요'}
+      </Text>
     </View>
   );
 }
 
 function AuthButtons() {
+  const dispatch = useDispatch();
+  const onPressLogin = () => {
+    dispatch(
+      authorize({
+        id: 1,
+        username: 'johndoe',
+        displayName: 'john Doe',
+      }),
+    );
+  };
+  const onPressLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <View>
-      <Button title="로그인" onPress={() => {}} />
-      <Button title="로그아웃" onPress={() => {}} />
+      <Button title="로그인" onPress={onPressLogin} />
+      <Button title="로그아웃" onPress={onPressLogout} />
     </View>
   );
 }
