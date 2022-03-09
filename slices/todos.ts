@@ -29,7 +29,7 @@ const todosSlice = createSlice({
     },
     remove(state, action: PayloadAction<number>) {
       const index = state.findIndex(todo => todo.id === action.payload);
-      state.splice(index);
+      state.splice(index, 1);
     },
     toggle(state, action: PayloadAction<number>) {
       const selected = state.find(todo => todo.id === action.payload);
