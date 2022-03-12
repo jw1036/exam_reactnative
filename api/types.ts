@@ -1,8 +1,8 @@
 export interface User {
   id: Number;
-  username: String;
-  email: String;
-  provider: String;
+  username: string;
+  email: string;
+  provider: string;
   confirmed: Boolean;
   blocked: null | boolean;
   role: number;
