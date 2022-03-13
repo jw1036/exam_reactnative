@@ -5,10 +5,13 @@ import ArticleScreen from './ArticleScreen';
 import RegisterScreen from './RegisterScreen';
 import LoginScreen from './LoginScreen';
 import MyArticlesScreen from './MyArticlesScreen';
+import useAuthLoadEffect from '../hooks/useAuthLoadEffect';
 
 const Stack = createNativeStackNavigator();
 
 function RootStack() {
+  useAuthLoadEffect();
+
   return (
     <Stack.Navigator
       screenOptions={{
