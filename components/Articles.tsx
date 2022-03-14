@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {Article} from '../api/types';
 import ArticleItem from './ArticleItem';
 import WriteButton from './WriteButton';
@@ -7,9 +7,16 @@ import WriteButton from './WriteButton';
 export interface ArticlesProps {
   articles: Article[];
   showWriteButton?: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage(): void;
 }
 
-function Articles({articles, showWriteButton}: ArticlesProps) {
+function Articles({
+  articles,
+  showWriteButton,
+  isFetchingNextPage,
+  fetchNextPage,
+}: ArticlesProps) {
   return (
     <FlatList
       data={articles}
@@ -25,9 +32,20 @@ function Articles({articles, showWriteButton}: ArticlesProps) {
       style={styles.list}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListHeaderComponent={() => (showWriteButton ? <WriteButton /> : null)}
-      ListFooterComponent={() =>
-        articles.length > 0 ? <View style={styles.separator} /> : null
-      }
+      ListFooterComponent={() => (
+        <>
+          {articles.length > 0 ? <View style={styles.separator} /> : null}
+          {isFetchingNextPage && (
+            <ActivityIndicator
+              size="small"
+              color="black"
+              style={styles.spinner}
+            />
+          )}
+        </>
+      )}
+      onEndReachedThreshold={0.5}
+      onEndReached={fetchNextPage}
     />
   );
 }
@@ -40,6 +58,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: '#cfd8dc',
+  },
+  spinner: {
+    backgroundColor: 'white',
+    paddingTop: 32,
+    paddingBottom: 32,
   },
 });
 
