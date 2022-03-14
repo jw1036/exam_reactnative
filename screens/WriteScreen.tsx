@@ -9,15 +9,17 @@ import {
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useMutation} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import {writeArticle} from '../api/articles';
 
 function WriteScreen() {
   const {top} = useSafeAreaInsets();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const queryClient = useQueryClient();
   const {mutate: write} = useMutation(writeArticle, {
     onSuccess: () => {
+      queryClient.invalidateQueries('articles');
       navigation.goBack();
     },
   });
