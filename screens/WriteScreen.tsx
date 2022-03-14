@@ -1,16 +1,38 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
   Platform,
   TextInput,
+  Pressable,
 } from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 function WriteScreen() {
   const {top} = useSafeAreaInsets();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+
+  const navigation = useNavigation();
+  const onSubmit = useCallback(() => {
+    // TODO: 구현 예정
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRightContainerStyle: styles.headerRightContainer,
+      headerRight: () => (
+        <Pressable
+          hitSlop={8}
+          onPress={onSubmit}
+          style={({pressed}) => pressed && styles.headerRightPressed}>
+          <MaterialIcons name="send" color="#2196f3" size={24} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, onSubmit]);
 
   return (
     <SafeAreaView style={styles.block} edges={['bottom']}>
@@ -61,6 +83,12 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginTop: 16,
     flex: 1,
+  },
+  headerRightContainer: {
+    marginRight: 16,
+  },
+  headerRightPressed: {
+    opacity: 0.75,
   },
 });
 
