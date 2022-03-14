@@ -1,5 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {Article} from '../api/types';
 import ArticleItem from './ArticleItem';
 import WriteButton from './WriteButton';
@@ -9,6 +15,8 @@ export interface ArticlesProps {
   showWriteButton?: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage(): void;
+  refresh(): void;
+  isRefreshing: boolean;
 }
 
 function Articles({
@@ -16,6 +24,8 @@ function Articles({
   showWriteButton,
   isFetchingNextPage,
   fetchNextPage,
+  refresh,
+  isRefreshing,
 }: ArticlesProps) {
   return (
     <FlatList
@@ -46,6 +56,9 @@ function Articles({
       )}
       onEndReachedThreshold={0.5}
       onEndReached={fetchNextPage}
+      refreshControl={
+        <RefreshControl onRefresh={refresh} refreshing={isRefreshing} />
+      }
     />
   );
 }
