@@ -1,10 +1,14 @@
 import React from 'react';
 import {Pressable, StyleSheet, Platform, Text} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackNavigationProp} from '../screens/types';
 
 function WriteButton() {
+  const navigation = useNavigation<RootStackNavigationProp>();
+
   const onPress = () => {
-    // TODO: 구현 예정
+    navigation.navigate('Write', {});
   };
 
   return (
