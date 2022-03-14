@@ -9,7 +9,7 @@ import {
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useMutation, useQueryClient} from 'react-query';
+import {InfiniteData, useMutation, useQueryClient} from 'react-query';
 import {writeArticle} from '../api/articles';
 import {Article} from '../api/types';
 
@@ -25,9 +25,24 @@ function WriteScreen() {
       // const articles = queryClient.getQueryData<Article[]>('articles') ?? [];
       // queryClient.setQueryData('articles', articles.concat(article));
 
-      queryClient.setQueryData<Article[]>('articles', articles =>
-        (articles ?? []).concat(article),
-      );
+      // queryClient.setQueryData<Article[]>('articles', articles =>
+      //   (articles ?? []).concat(article),
+      // );
+
+      queryClient.setQueriesData<InfiniteData<Article[]>>('articles', data => {
+        if (!data) {
+          return {
+            pageParams: [undefined],
+            pages: [[article]],
+          };
+        }
+        const [firstPage, ...rest] = data.pages;
+        console.log({firstPage, rest});
+        return {
+          ...data,
+          pages: [[article, ...firstPage], ...rest],
+        };
+      });
 
       navigation.goBack();
     },
