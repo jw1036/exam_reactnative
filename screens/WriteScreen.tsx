@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useMutation, useQueryClient} from 'react-query';
 import {writeArticle} from '../api/articles';
+import {Article} from '../api/types';
 
 function WriteScreen() {
   const {top} = useSafeAreaInsets();
@@ -18,8 +19,16 @@ function WriteScreen() {
   const [body, setBody] = useState('');
   const queryClient = useQueryClient();
   const {mutate: write} = useMutation(writeArticle, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('articles');
+    onSuccess: article => {
+      // queryClient.invalidateQueries('articles');
+
+      // const articles = queryClient.getQueryData<Article[]>('articles') ?? [];
+      // queryClient.setQueryData('articles', articles.concat(article));
+
+      queryClient.setQueryData<Article[]>('articles', articles =>
+        (articles ?? []).concat(article),
+      );
+
       navigation.goBack();
     },
   });
