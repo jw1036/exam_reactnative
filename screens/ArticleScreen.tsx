@@ -9,6 +9,7 @@ import ArticleView from '../components/ArticleView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CommentItem from '../components/CommentItem';
 import {useUserState} from '../contexts/UserContext';
+import CommentInput from '../components/CommentInput';
 
 type ArticleScreenRouteProp = RouteProp<RootStackParamList, 'Article'>;
 
@@ -46,14 +47,17 @@ function ArticleScreen() {
       )}
       keyExtractor={item => item.id.toString()}
       ListHeaderComponent={
-        <ArticleView
-          title={title}
-          body={body}
-          publishedAt={published_at}
-          username={user.username}
-          id={id}
-          isMyArticle={isMyArticle}
-        />
+        <>
+          <ArticleView
+            title={title}
+            body={body}
+            publishedAt={published_at}
+            username={user.username}
+            id={id}
+            isMyArticle={isMyArticle}
+          />
+          <CommentInput articleId={id} />
+        </>
       }
     />
   );
