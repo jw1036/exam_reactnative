@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -7,17 +7,28 @@ import {
   Pressable,
 } from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {InfiniteData, useMutation, useQueryClient} from 'react-query';
-import {writeArticle} from '../api/articles';
+import {modifyArticle, writeArticle} from '../api/articles';
 import {Article} from '../api/types';
+import {RootStackParamList} from './types';
+
+type WriteScreenRouteProp = RouteProp<RootStackParamList, 'Write'>;
 
 function WriteScreen() {
-  const {top} = useSafeAreaInsets();
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const {params} = useRoute<WriteScreenRouteProp>();
   const queryClient = useQueryClient();
+  const cachedArticle = useMemo(
+    () =>
+      params.articleId
+        ? queryClient.getQueryData<Article>(['article', params.articleId])
+        : null,
+    [params.articleId, queryClient],
+  );
+  const {top} = useSafeAreaInsets();
+  const [title, setTitle] = useState(cachedArticle?.title ?? '');
+  const [body, setBody] = useState(cachedArticle?.body ?? '');
   const {mutate: write} = useMutation(writeArticle, {
     onSuccess: article => {
       // queryClient.invalidateQueries('articles');
@@ -47,11 +58,34 @@ function WriteScreen() {
       navigation.goBack();
     },
   });
+  const {mutate: modify} = useMutation(modifyArticle, {
+    onSuccess: article => {
+      queryClient.setQueryData<InfiniteData<Article[]>>('articles', data => {
+        if (!data) {
+          return {pageParams: [], pages: []};
+        }
+        return {
+          pageParams: data!.pageParams,
+          pages: data!.pages.map(page =>
+            page.find(a => a.id === params.articleId)
+              ? page.map(a => (a.id === params.articleId ? article : a))
+              : page,
+          ),
+        };
+      });
+      queryClient.setQueryData(['article', params.articleId], article);
+      navigation.goBack();
+    },
+  });
 
   const navigation = useNavigation();
   const onSubmit = useCallback(() => {
-    write({title, body});
-  }, [body, title, write]);
+    if (params.articleId) {
+      modify({id: params.articleId, title, body});
+    } else {
+      write({title, body});
+    }
+  }, [body, modify, params.articleId, title, write]);
 
   useEffect(() => {
     navigation.setOptions({
